@@ -1,5 +1,5 @@
 import { Modal } from 'antd';
-import React, { PropsWithChildren } from 'react';
+import React, { type PropsWithChildren } from 'react';
 
 interface CreateFormProps {
   modalVisible: boolean;
