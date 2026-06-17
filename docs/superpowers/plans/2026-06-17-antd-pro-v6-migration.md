@@ -181,14 +181,25 @@ Expected: pre-commit 用 biome 跑过暂存的 json 文件；`max verify-commit`
 ### Task 2: 接入 umi 插件 —— Tailwind v4 + React Query + antd App 上下文
 
 **Files:**
-- Modify: `.umirc.ts`
+- Modify: `package.json`（新增 `tailwindcss` devDep）, `.umirc.ts`
 - Create: `tailwind.config.js`, `tailwind.css`
 
 **Interfaces:**
-- Consumes: T1 安装的 `tailwindcss`、`@tanstack/react-query`。
+- Consumes: T1 安装的 `@tanstack/react-query`（reactQuery 插件用）。
 - Produces: 全局 Tailwind 原子类可用；`useQuery` 等可从 `@umijs/max` 导入；antd 静态方法（message 等）有 App 上下文。
 
-- [ ] **Step 1: 修改 `.umirc.ts`**（新增 `tailwindcss`、`reactQuery`；`antd: {}`→`antd: { appConfig: {} }`；其余不动）
+> 注：T1 的 package.json 未含 `tailwindcss`，**本任务负责新增并安装**。umi 的 `tailwindcss` 插件需要项目内安装 tailwindcss，且**只需 `tailwindcss`、不需要 `@tailwindcss/postcss`**（umi 插件自管 PostCSS，与官方 Pro v6 一致）。
+
+- [ ] **Step 1: 安装 tailwindcss v4，再修改 `.umirc.ts`**
+
+先安装 tailwindcss（T1 漏装；只需它，不要 `@tailwindcss/postcss`）：
+
+```bash
+pnpm add -D tailwindcss@^4.3.0
+```
+Expected: `tailwindcss` 进入 devDependencies 且安装成功。
+
+再修改 `.umirc.ts`（新增 `tailwindcss`、`reactQuery`；`antd: {}`→`antd: { appConfig: {} }`；其余不动）：
 
 ```ts
 import { defineConfig } from '@umijs/max';

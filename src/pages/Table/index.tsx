@@ -1,16 +1,17 @@
-import services from '@/services/demo';
 import {
-  ActionType,
+  type ActionType,
   FooterToolbar,
   PageContainer,
+  type ProColumns,
   ProDescriptions,
-  ProDescriptionsItemProps,
+  type ProDescriptionsItemProps,
   ProTable,
 } from '@ant-design/pro-components';
 import { Button, Divider, Drawer, message } from 'antd';
 import React, { useRef, useState } from 'react';
+import services from '@/services/demo';
 import CreateForm from './components/CreateForm';
-import UpdateForm, { FormValueType } from './components/UpdateForm';
+import UpdateForm, { type FormValueType } from './components/UpdateForm';
 
 const { addUser, queryUserList, deleteUser, modifyUser } =
   services.UserController;
@@ -87,14 +88,14 @@ const TableList: React.FC<unknown> = () => {
   const [updateModalVisible, handleUpdateModalVisible] =
     useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
   const [row, setRow] = useState<API.UserInfo>();
   const [selectedRowsState, setSelectedRows] = useState<API.UserInfo[]>([]);
-  const columns: ProDescriptionsItemProps<API.UserInfo>[] = [
+  const columns: ProColumns<API.UserInfo>[] = [
     {
       title: '名称',
       dataIndex: 'name',
-      tip: '名称是唯一的 key',
+      tooltip: '名称是唯一的 key',
       formItemProps: {
         rules: [
           {
@@ -164,8 +165,8 @@ const TableList: React.FC<unknown> = () => {
         request={async (params, sorter, filter) => {
           const { data, success } = await queryUserList({
             ...params,
-            // FIXME: remove @ts-ignore
-            // @ts-ignore
+            // FIXME: remove @ts-expect-error
+            // @ts-expect-error
             sorter,
             filter,
           });
@@ -259,7 +260,9 @@ const TableList: React.FC<unknown> = () => {
             params={{
               id: row?.name,
             }}
-            columns={columns}
+            // pro-components 3 中 ProDescriptions 与 ProTable 的列类型已分化，
+            // 复用同一份列定义需在此做类型转换（运行时结构一致）。
+            columns={columns as ProDescriptionsItemProps<API.UserInfo>[]}
           />
         )}
       </Drawer>
