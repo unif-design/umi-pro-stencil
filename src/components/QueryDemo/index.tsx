@@ -10,6 +10,7 @@ const QueryDemo: React.FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 300));
       return new Date().toLocaleString();
     },
+    staleTime: 60_000,
   });
 
   return (
