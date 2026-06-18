@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>umi-pro-stencil · 目录结构标准</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1f2329; --sub:#646a73; --line:#e5e6eb;
+    --folder:#2f6fed; --file:#3a3f47; --cmt:#8a9099;
+    --shared:#16a34a; --private:#ea7b1b; --config:#8b5cf6; --gen:#9aa1ab; --accent:#2f6fed;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 20px 56px;}
+  h1{font-size:22px;margin:0 0 4px;}
+  .lead{color:var(--sub);margin:0 0 20px;}
+  .principle{background:#eef4ff;border:1px solid #d6e4ff;border-left:4px solid var(--accent);
+    border-radius:10px;padding:14px 16px;margin:0 0 24px;}
+  .principle b{color:var(--accent)}
+  .grid{display:grid;grid-template-columns:1fr;gap:18px;}
+  @media(min-width:880px){.grid.two{grid-template-columns:1fr 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:18px 20px;box-shadow:0 1px 2px rgba(0,0,0,.03);}
+  .card h2{font-size:15px;margin:0 0 2px;display:flex;align-items:center;gap:8px;}
+  .card .desc{color:var(--sub);font-size:12.5px;margin:0 0 14px;}
+  .tag{font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;color:#fff;letter-spacing:.3px;}
+  .t-src{background:var(--accent)} .t-comp{background:var(--private)} .t-page{background:#0ea5a4}
+  .tree{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;}
+  .row{display:grid;grid-template-columns:206px 1fr;column-gap:10px;align-items:baseline;line-height:1.9;}
+  .name{white-space:pre;}
+  .fold{color:var(--folder);font-weight:600;}
+  .file{color:var(--file);}
+  .cmt{color:var(--cmt);font-size:12px;}
+  .b-shared{color:var(--shared);font-weight:600} .b-private{color:var(--private);font-weight:600}
+  .b-config{color:var(--config);font-weight:600} .b-gen{color:var(--gen)}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:22px 0 0;padding:14px 16px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+  .note{color:var(--sub);font-size:12.5px;margin:12px 0 0;}
+  .note code,.cmt code{background:#f1f2f3;padding:1px 5px;border-radius:5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>umi-pro-stencil · 目录结构标准</h1>
+  <p class="lead">@umijs/max + Ant Design Pro v6 · Web 端代码归位，及组件 / 页面内部结构</p>
+
+  <div class="principle">
+    <b>核心原则：私有就近，复用上提。</b>
+    只在某组件 / 页面内用的方法、工具、常量、类型、子组件 → 放它自己目录里（<b>私有文件用单数</b>、<b>子组件直接平铺</b>）；
+    一旦 <b>≥2 处复用</b>，再提到 <code>src/</code> 公共目录（services / hooks / utils / constants / types / components，<b>复数</b>）。
+  </div>
+
+  <div class="card">
+    <h2><span class="tag t-src">SRC 顶层</span> src/ 与根级目录</h2>
+    <p class="desc">每类代码唯一归属；公共能力集中在这些大文件夹。</p>
+    <div class="tree">
+      <div class="row"><span class="name fold">src/</span><span class="cmt"></span></div>
+      <div class="row"><span class="name fold">├─ pages/</span><span class="cmt">路由页面，一页一目录（见"页面内部"）</span></div>
+      <div class="row"><span class="name fold">├─ components/</span><span class="cmt"><span class="b-shared">跨页面复用</span>的业务组件（antd/Pro 封装）</span></div>
+      <div class="row"><span class="name fold">├─ services/</span><span class="cmt">接口：<code>&lt;模块&gt;/XxxController.ts + typings.d.ts + index.ts</code></span></div>
+      <div class="row"><span class="name fold">├─ hooks/</span><span class="cmt"><span class="b-shared">跨组件复用</span>的 hook（<code>useXxx.ts</code>）</span></div>
+      <div class="row"><span class="name fold">├─ models/</span><span class="cmt">全局 / 跨组件状态（umi model + useModel）</span></div>
+      <div class="row"><span class="name fold">├─ types/</span><span class="cmt">全局 TS 类型（<code>*.d.ts</code>）</span></div>
+      <div class="row"><span class="name fold">├─ utils/ · constants/ · assets/</span><span class="cmt">纯函数 · 常量枚举 · 静态资源</span></div>
+      <div class="row"><span class="name file">└─ access.ts · app.tsx</span><span class="cmt">权限 · 运行时（getInitialState/layout/request）</span></div>
+      <div class="row"><span class="name"> </span><span class="cmt"></span></div>
+      <div class="row"><span class="name b-config">config/</span><span class="cmt">构建/路由/插件：<code>config.ts + routes.ts + defaultSettings.ts + proxy.ts</code></span></div>
+      <div class="row"><span class="name b-config">mock/</span><span class="cmt">本地接口 mock（遵循 <code>{code,data,message}</code> 信封）</span></div>
+      <div class="row"><span class="name b-gen">src/.umi*/</span><span class="cmt">生成物，勿动（gitignore）</span></div>
+    </div>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <h2><span class="tag t-comp">组件内部</span> components/&lt;Name&gt;/</h2>
+      <p class="desc">复用业务组件；私有内容就近，子组件平铺，外部只从 index 引。</p>
+      <div class="tree">
+        <div class="row"><span class="name fold">ArticleCard/</span><span class="cmt"></span></div>
+        <div class="row"><span class="name file">├─ index.tsx</span><span class="cmt">唯一对外入口</span></div>
+        <div class="row"><span class="name file">├─ ArticleCard.tsx</span><span class="cmt">主组件（与目录同名）</span></div>
+        <div class="row"><span class="name file">├─ ArticleTag.tsx</span><span class="cmt"><span class="b-private">私有子组件</span>（直接平铺，不套 components/）</span></div>
+        <div class="row"><span class="name file">├─ hook.ts</span><span class="cmt"><span class="b-private">私有</span>方法 / 逻辑（单数）</span></div>
+        <div class="row"><span class="name file">├─ util.ts</span><span class="cmt"><span class="b-private">私有</span>工具</span></div>
+        <div class="row"><span class="name file">├─ constant.ts</span><span class="cmt"><span class="b-private">私有</span>常量</span></div>
+        <div class="row"><span class="name file">├─ type.ts</span><span class="cmt"><span class="b-private">私有</span>类型（含 Props）</span></div>
+        <div class="row"><span class="name file">└─ index.style.ts</span><span class="cmt">样式（antd-style createStyles）</span></div>
+      </div>
+      <p class="note">极简组件可只留 <code>index.tsx</code>。外部 <code>import ArticleCard from '@/components/ArticleCard'</code>，<b>不深引内部文件</b>。</p>
+    </div>
+
+    <div class="card">
+      <h2><span class="tag t-page">页面内部</span> pages/&lt;Page&gt;/</h2>
+      <p class="desc">路由页面；与组件同构——私有内容就近，子组件平铺。</p>
+      <div class="tree">
+        <div class="row"><span class="name fold">Article/</span><span class="cmt"></span></div>
+        <div class="row"><span class="name file">├─ index.tsx</span><span class="cmt">页面入口（config/routes.ts 注册）</span></div>
+        <div class="row"><span class="name file">├─ ArticleModal.tsx</span><span class="cmt"><span class="b-private">页面私有</span>子组件（平铺）</span></div>
+        <div class="row"><span class="name file">├─ hook.ts</span><span class="cmt"><span class="b-private">页面私有</span>方法 / 逻辑</span></div>
+        <div class="row"><span class="name file">├─ util.ts</span><span class="cmt"><span class="b-private">页面私有</span>工具</span></div>
+        <div class="row"><span class="name file">├─ constant.ts</span><span class="cmt"><span class="b-private">页面私有</span>常量</span></div>
+        <div class="row"><span class="name file">├─ type.ts</span><span class="cmt"><span class="b-private">页面私有</span>类型</span></div>
+        <div class="row"><span class="name file">└─ index.style.ts</span><span class="cmt"><span class="b-private">页面私有</span>样式</span></div>
+      </div>
+      <p class="note">接口走 <code>src/services/</code>，页面只 import。某块复用 ≥2 次才提到 <code>src/</code>。</p>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--folder)"></i> 目录</span>
+    <span><i class="dot" style="background:var(--file)"></i> 文件</span>
+    <span><i class="dot" style="background:var(--shared)"></i> 跨范围复用 → src/ 公共目录（复数）</span>
+    <span><i class="dot" style="background:var(--private)"></i> 私有 → 就近、单数、平铺</span>
+    <span><i class="dot" style="background:var(--config)"></i> 配置</span>
+    <span><i class="dot" style="background:var(--gen)"></i> 生成物</span>
+  </div>
+</div>
+</body>
+</html>
